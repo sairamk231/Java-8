@@ -1,1 +1,266 @@
+1. What is Collectors API?
 
+Collectors is a utility class in java.util.stream.Collectors that provides predefined implementations of the Collector interface.
+Collectors are mainly used with stream terminal operation collect() to:
+Convert stream into a collection
+Aggregate data
+Group or partition data
+Perform reduction operations
+
+Interview one-liner
+“Collectors API is used to transform and aggregate stream elements into collections or summarized results.”
+
+2. Where Collectors Fit in Streams Pipeline
+Source → Intermediate Operations → collect(Collector)
+
+List<Integer> even =
+    list.stream()
+        .filter(x -> x % 2 == 0)
+        .collect(Collectors.toList());
+
+3. Core Categories of Collectors (🔥 MUST KNOW)
+
+Collection collectors
+Grouping collectors
+Partitioning collectors
+Reduction & summarization collectors
+Mapping & filtering collectors
+Joining collectors
+Special / advanced collectors
+
+4. Sample Data Used in Examples
+class Employee {
+    int id;
+    String name;
+    String dept;
+    int salary;
+
+    Employee(int id, String name, String dept, int salary) {
+        this.id = id;
+        this.name = name;
+        this.dept = dept;
+        this.salary = salary;
+    }
+}
+
+List<Employee> employees = List.of(
+    new Employee(1, "Sai", "IT", 50000),
+    new Employee(2, "Ram", "HR", 40000),
+    new Employee(3, "John", "IT", 70000),
+    new Employee(4, "Mike", "HR", 60000)
+);
+
+5. Collection Collectors
+5.1 toList()
+List<String> names =
+    employees.stream()
+             .map(e -> e.name)
+             .collect(Collectors.toList());
+
+System.out.println(names);
+
+Output
+[Sai, Ram, John, Mike]
+
+✔ Most commonly used
+❌ Returned list is mutable
+
+5.2 toSet()
+Set<String> depts =
+    employees.stream()
+             .map(e -> e.dept)
+             .collect(Collectors.toSet());
+
+System.out.println(depts);
+
+Output
+[IT, HR]
+
+✔ Removes duplicates
+❌ Order not guaranteed
+
+5.3 toCollection()
+LinkedList<String> list =
+    employees.stream()
+             .map(e -> e.name)
+             .collect(Collectors.toCollection(LinkedList::new));
+System.out.println(list);
+
+6. Grouping Collectors (🔥 VERY IMPORTANT)
+6.1 groupingBy()
+Map<String, List<Employee>> byDept =
+    employees.stream()
+             .collect(Collectors.groupingBy(e -> e.dept));
+
+System.out.println(byDept.keySet());
+
+Output
+[IT, HR]
+
+✔ Groups elements based on key
+✔ Very common in interviews
+
+6.2 groupingBy() with Mapping
+Map<String, List<String>> namesByDept =
+    employees.stream()
+             .collect(Collectors.groupingBy(
+                 e -> e.dept,
+                 Collectors.mapping(e -> e.name, Collectors.toList())
+             ));
+
+System.out.println(namesByDept);
+
+Output
+{IT=[Sai, John], HR=[Ram, Mike]}
+
+6.3 groupingBy() with Counting
+Map<String, Long> countByDept =
+    employees.stream()
+             .collect(Collectors.groupingBy(
+                 e -> e.dept,
+                 Collectors.counting()
+             ));
+
+System.out.println(countByDept);
+
+Output
+{IT=2, HR=2}
+
+7. Partitioning Collectors (🔥 Interview Favorite)
+7.1 partitioningBy()
+Splits data into two groups (true / false).
+
+Map<Boolean, List<Employee>> salaryPartition =
+    employees.stream()
+             .collect(Collectors.partitioningBy(e -> e.salary > 50000));
+
+System.out.println(salaryPartition.get(true));
+
+Output
+[Employee(John), Employee(Mike)]
+
+✔ Always produces two keys
+✔ Faster than grouping for boolean conditions
+
+8. Reduction & Summarization Collectors
+8.1 counting()
+long count =
+    employees.stream()
+             .collect(Collectors.counting());
+System.out.println(count);
+
+Output
+4
+
+8.2 summingInt()
+int totalSalary =
+    employees.stream()
+             .collect(Collectors.summingInt(e -> e.salary));
+
+System.out.println(totalSalary);
+
+Output
+220000
+
+8.3 averagingInt()
+double avgSalary =
+    employees.stream()
+             .collect(Collectors.averagingInt(e -> e.salary));
+
+System.out.println(avgSalary);
+
+Output
+55000.0
+
+8.4 summarizingInt() (🔥 Very Important)
+IntSummaryStatistics stats =
+    employees.stream()
+             .collect(Collectors.summarizingInt(e -> e.salary));
+
+System.out.println(stats);
+
+Output
+IntSummaryStatistics{count=4, sum=220000, min=40000, average=55000.0, max=70000}
+
+✔ Gives count, sum, min, max, avg in one go
+
+9. Joining Collectors
+9.1 joining()
+String names =
+    employees.stream()
+             .map(e -> e.name)
+             .collect(Collectors.joining(", "));
+
+System.out.println(names);
+
+Output
+Sai, Ram, John, Mike
+
+9.2 joining() with Prefix & Suffix
+String result =
+    employees.stream()
+             .map(e -> e.name)
+             .collect(Collectors.joining(", ", "[", "]"));
+
+System.out.println(result);
+
+Output
+[Sai, Ram, John, Mike]
+
+10. Mapping & Filtering Collectors (Advanced)
+10.1 mapping()
+Map<String, List<String>> map =
+    employees.stream()
+             .collect(Collectors.groupingBy(
+                 e -> e.dept,
+                 Collectors.mapping(e -> e.name, Collectors.toList())
+             ));
+
+10.2 filtering() (Java 9+, still asked)
+Map<String, List<Employee>> highPaidByDept =
+    employees.stream()
+             .collect(Collectors.groupingBy(
+                 e -> e.dept,
+                 Collectors.filtering(e -> e.salary > 50000, Collectors.toList())
+             ));
+
+11. collectingAndThen() (🔥 Tricky)
+
+Used for post-processing collected result.
+
+List<Employee> unmodifiableList =
+    employees.stream()
+             .collect(Collectors.collectingAndThen(
+                 Collectors.toList(),
+                 List::copyOf
+             ));
+
+System.out.println(unmodifiableList.size());
+
+✔ Creates immutable result
+
+12. Custom Collector (Advanced – Rare Interview)
+Collector<Integer, List<Integer>, List<Integer>> customCollector =
+    Collector.of(
+        ArrayList::new,
+        List::add,
+        (l1, l2) -> { l1.addAll(l2); return l1; }
+    );
+
+16. Common Interview Questions (4+ Years)
+
+Q1. Difference between groupingBy and partitioningBy?
+groupingBy → multiple keys
+partitioningBy → boolean (2 keys)
+
+Q2. Which collector gives min, max, avg, sum at once?
+summarizingInt
+
+Q3. Is Collectors thread-safe?
+❌ No
+
+Q4. Can we create custom collector?
+✅ Yes
+
+Q5. groupingBy vs map?
+groupingBy groups elements, map transforms elements
