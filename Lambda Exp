@@ -1,0 +1,324 @@
+1. What is a Lambda Expression?
+A lambda expression is an anonymous function (method without name) that:
+Has no name
+Has no access modifier
+Can be passed as a value
+Implements a functional interface
+
+Syntax
+(parameters) -> expression
+or
+(parameters) -> { statements; }
+
+Interview one-liner
+“A lambda expression is a concise way to implement a functional interface.”
+
+2. Why Lambda Expressions Were Introduced (Java 8)?
+Problems Before Java 8
+Too much boilerplate code
+Verbose anonymous inner classes
+Poor readability
+
+Benefits
+✔ Reduces boilerplate
+✔ Improves readability
+✔ Enables functional programming
+✔ Works seamlessly with Streams API
+
+3. Functional Interface (🔥 MUST KNOW)
+A functional interface is an interface with exactly ONE abstract method.
+
+@FunctionalInterface
+interface MyTask {
+    void execute();
+}
+
+✔ Can have:
+default methods
+static methods
+
+❌ Cannot have more than one abstract method
+
+4. Lambda vs Anonymous Inner Class
+Before Java 8 (Boilerplate ❌)
+Runnable r = new Runnable() {
+    @Override
+    public void run() {
+        System.out.println("Thread running");
+    }
+};
+
+Java 8 Lambda (Clean ✅)
+Runnable r = () -> System.out.println("Thread running");
+
+5. Lambda Expression Syntax Variations
+5.1 No Parameters
+() -> System.out.println("Hello")
+
+5.2 One Parameter
+x -> x * x
+
+
+Parentheses optional if only one parameter
+
+5.3 Multiple Parameters
+(a, b) -> a + b
+
+5.4 Multiple Statements
+(a, b) -> {
+    int sum = a + b;
+    return sum;
+}
+
+6. Types of Lambda Expressions (with Examples)
+6.1 Lambda with No Parameters
+Functional Interface
+@FunctionalInterface
+interface Hello {
+    void sayHello();
+}
+
+Usage
+public class Test {
+    public static void main(String[] args) {
+        Hello h = () -> System.out.println("Hello Lambda");
+        h.sayHello();
+    }
+}
+
+Output
+Hello Lambda
+
+6.2 Lambda with One Parameter
+@FunctionalInterface
+interface Square {
+    int square(int x);
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Square s = x -> x * x;
+        System.out.println(s.square(5));
+    }
+}
+
+Output
+25
+
+6.3 Lambda with Multiple Parameters
+@FunctionalInterface
+interface Add {
+    int add(int a, int b);
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Add a = (x, y) -> x + y;
+        System.out.println(a.add(10, 20));
+    }
+}
+
+Output
+30
+
+6.4 Lambda with Return Statement
+@FunctionalInterface
+interface Length {
+    int length(String s);
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Length l = s -> s.length();
+        System.out.println(l.length("Spring"));
+    }
+}
+
+Output
+6
+
+6.5 Lambda with Multiple Statements
+Add add = (a, b) -> {
+    System.out.println("Adding numbers");
+    return a + b;
+};
+
+System.out.println(add.add(5, 10));
+
+Output
+Adding numbers
+15
+------------------------------------------------------------------------
+7. Built-in Functional Interfaces (🔥 VERY IMPORTANT)
+
+Package: java.util.function
+
+7.1 Predicate<T> – Condition Check
+
+Input: T
+Output: boolean
+
+Predicate<Integer> p = x -> x > 18;
+System.out.println(p.test(20));
+
+Output
+true
+
+Use case: filtering, validations
+
+7.2 Function<T, R> – Transformation
+Function<String, Integer> f = s -> s.length();
+System.out.println(f.apply("Java"));
+
+Output
+4
+
+7.3 Consumer<T> – Takes Input, No Output
+Consumer<String> c = s -> System.out.println(s);
+c.accept("Spring Boot");
+
+Output
+Spring Boot
+
+7.4 Supplier<T> – No Input, Returns Output
+Supplier<Double> s = () -> Math.random();
+System.out.println(s.get());
+
+Output
+0.47   // random value
+
+7.5 BiPredicate<T, U>
+BiPredicate<Integer, Integer> bp = (a, b) -> a > b;
+System.out.println(bp.test(10, 5));
+
+Output
+true
+
+7.6 BiFunction<T, U, R>
+BiFunction<Integer, Integer, Integer> bf = (a, b) -> a + b;
+System.out.println(bf.apply(10, 20));
+
+Output
+30
+
+7.7 UnaryOperator<T>
+UnaryOperator<Integer> u = x -> x * x;
+System.out.println(u.apply(6));
+
+Output
+36
+
+7.8 BinaryOperator<T>
+BinaryOperator<Integer> b = (a, c) -> a + c;
+System.out.println(b.apply(10, 20));
+
+Output
+30
+---------------------------------------------------------------------
+8. Lambda with Collections (🔥 Interview Favorite)
+List<String> list = List.of("Java", "Spring", "Boot");
+list.forEach(System.out::println);
+
+Output
+Java
+Spring
+Boot
+------------------------------------------------------------------------
+9. Lambda with Comparator
+List<Integer> list = Arrays.asList(3, 1, 2);
+Collections.sort(list, (a, b) -> a - b);
+System.out.println(list);
+
+Output
+[1, 2, 3]
+----------------------------------------------------------------------
+10. Lambda with Streams (🔥 MUST KNOW)
+List<Integer> list = List.of(1, 2, 3, 4, 5);
+
+list.stream()
+    .filter(x -> x % 2 == 0)
+    .map(x -> x * 2)
+    .forEach(System.out::println);
+
+Output
+4
+8
+------------------------------------------------------------------------
+11. Lambda with Threads
+Thread t = new Thread(() -> System.out.println("Thread running"));
+t.start();
+
+Output
+Thread running
+---------------------------------------------------------------------
+12. Variable Capture in Lambda (🔥 Tricky)
+int x = 10;
+
+Runnable r = () -> {
+    System.out.println(x);
+};
+
+✔ Variable must be effectively final
+❌ Not allowed:
+x = 20; // compile error
+
+13. Lambda vs Method (Key Differences)
+| Lambda                  | Method               |
+| ----------------------- | -------------------- |
+| Anonymous               | Named                |
+| Used with FI            | Independent          |
+| No explicit return type | Explicit return type |
+
+14. Lambda Limitations
+
+❌ Works only with functional interfaces
+❌ Cannot modify local variables
+❌ Checked exceptions need handling
+
+16. Performance Perspective
+Lambdas compiled using invokedynamic
+No anonymous class overhead
+JVM optimizes aggressively
+Not slower than traditional code
+
+17. Common Interview Questions (4+ Years)
+Q1. Is lambda an object?
+
+✅ Yes (instance of functional interface)
+
+Q2. Can lambda have multiple abstract methods?
+
+❌ No
+
+Q3. Difference between lambda and anonymous class?
+
+Lambda → no this
+
+Lambda → less memory overhead
+
+Q4. Can lambda access instance variables?
+
+✅ Yes
+
+Q5. Is Runnable a functional interface?
+
+✅ Yes
+
+18. Linked Topics to Prepare Together 🔗
+Functional Interfaces
+Streams API
+Method References
+Optional
+Comparator
+CompletableFuture
+Reactive programming
+
+19. Interview One-Liners (Use These):
+“Lambda expressions implement functional interfaces.”
+“Lambda reduces boilerplate code.”
+“Predicate returns boolean.”
+“Consumer has no return value.”
+“Supplier provides value without input.”
+
+20. Interview Closing Statement
+“Lambda expressions are a core Java 8 feature that enable functional programming, reduce boilerplate, and are widely used in Streams and Spring Boot applications.”
