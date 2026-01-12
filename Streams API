@@ -1,0 +1,315 @@
+1. What is a Stream?
+A Stream represents a sequence of elements from a data source (Collection, Array, I/O) that supports functional-style operations.
+
+Interview one-liner
+“A stream processes data from a source using a pipeline of functional operations.”
+
+2. What Stream is NOT (Very Important)
+
+❌ Not a data structure
+❌ Does not store data
+❌ Does not modify the source
+❌ Cannot be reused
+
+✔ It processes data
+✔ One-time use only
+
+3. Why Streams Were Introduced (Java 8)?
+Problems Before Java 8:
+Verbose loops
+External iteration
+Hard to parallelize
+Boilerplate code
+
+Benefits of Streams:
+
+✔ Declarative style
+✔ Less boilerplate
+✔ Lazy evaluation
+✔ Easy parallelism
+✔ Better readability
+
+4. Stream Pipeline (🔥 MUST KNOW)
+Source → Intermediate Operations → Terminal Operation
+
+list.stream()
+    .filter(x -> x > 10)
+    .map(x -> x * 2)
+    .forEach(System.out::println);
+
+5. Stream Sources (All Ways)
+5.1 From Collection
+List<Integer> list = List.of(1, 2, 3);
+Stream<Integer> s = list.stream();
+
+5.2 From Array
+int[] arr = {1, 2, 3};
+IntStream s = Arrays.stream(arr);
+
+5.3 Using Stream.of()
+Stream<String> s = Stream.of("Java", "Spring");
+
+5.4 Infinite Streams
+Stream<Integer> s = Stream.iterate(1, n -> n + 1);
+
+6. Types of Streams
+6.1 Sequential Stream (Default)
+list.stream();
+
+6.2 Parallel Stream
+list.parallelStream();
+
+
+✔ Uses ForkJoinPool
+❌ Order not guaranteed
+
+7. Intermediate Operations (Lazy)
+Executed only when terminal operation is called
+
+7.1 filter()
+List<Integer> list = List.of(1, 2, 3, 4);
+
+list.stream()
+    .filter(x -> x % 2 == 0)
+    .forEach(System.out::println);
+
+Output
+
+2
+4
+
+7.2 map()
+list.stream()
+    .map(x -> x * x)
+    .forEach(System.out::println);
+
+Output
+1
+4
+9
+16
+
+7.3 flatMap() (🔥 Interview Favorite)
+List<List<Integer>> list =
+    List.of(List.of(1, 2), List.of(3, 4));
+
+list.stream()
+    .flatMap(l -> l.stream())
+    .forEach(System.out::println);
+
+Output
+
+1
+2
+3
+4
+
+9. map() vs flatMap() – Side-by-Side Comparison
+| Aspect         | `map()`         | `flatMap()`           |
+| -------------- | --------------- | --------------------- |
+| Transformation | One-to-one      | One-to-many           |
+| Return type    | `R`             | `Stream<R>`           |
+| Result stream  | Nested possible | Always flattened      |
+| Common use     | Field mapping   | Nested collections    |
+| Output size    | Same as input   | Can increase/decrease |
+
+
+7.4 distinct()
+List<Integer> list = List.of(1, 2, 2, 3);
+list.stream()
+    .distinct()
+    .forEach(System.out::println);
+
+Output
+
+1
+2
+3
+
+7.5 sorted()
+List<Integer> list = List.of(3, 1, 2);
+
+list.stream()
+    .sorted()
+    .forEach(System.out::println);
+
+
+Output
+
+1
+2
+3
+
+Custom Sort
+
+list.stream()
+    .sorted((a, b) -> b - a)
+    .forEach(System.out::println);
+
+Output
+3
+2
+1
+
+7.6 limit() & skip()
+Stream.iterate(1, n -> n + 1)
+      .skip(2)
+      .limit(3)
+      .forEach(System.out::println);
+
+Output
+3
+4
+5
+
+8. Terminal Operations (🔥 MUST KNOW)
+8.1 forEach()
+list.stream().forEach(System.out::println);
+
+8.2 collect()
+List<Integer> even =
+    list.stream()
+        .filter(x -> x % 2 == 0)
+        .collect(Collectors.toList());
+
+System.out.println(even);
+
+Output
+[2, 4]
+
+8.3 reduce() (🔥 Very Important)
+List<Integer> list = List.of(1, 2, 3, 4);
+
+int sum = list.stream()
+              .reduce(0, (a, b) -> a + b);
+
+System.out.println(sum);
+
+Output
+10
+
+8.4 count()
+long count = list.stream().count();
+System.out.println(count);
+
+Output
+4
+
+8.5 min() & max()
+int max = list.stream()
+              .max(Integer::compare)
+              .get();
+
+System.out.println(max);
+
+Output
+4
+
+8.6 anyMatch(), allMatch(), noneMatch()
+System.out.println(list.stream().anyMatch(x -> x > 3));
+System.out.println(list.stream().allMatch(x -> x > 0));
+System.out.println(list.stream().noneMatch(x -> x < 0));
+
+Output
+true
+true
+true
+
+8.7 findFirst() & findAny()
+System.out.println(list.stream().findFirst().get());
+
+Output
+1
+
+9. Streams with Custom Objects (🔥 MUST KNOW)
+class Employee {
+    int id;
+    String name;
+    int salary;
+
+    Employee(int id, String name, int salary) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+    }
+}
+
+List<Employee> list = List.of(
+    new Employee(1, "Sai", 50000),
+    new Employee(2, "Ram", 70000)
+);
+
+list.stream()
+    .filter(e -> e.salary > 60000)
+    .map(e -> e.name)
+    .forEach(System.out::println);
+
+
+Output
+Ram
+
+10. Collectors API (🔥 VERY IMPORTANT)
+10.1 groupingBy()
+Map<Integer, List<Employee>> map =
+    list.stream()
+        .collect(Collectors.groupingBy(e -> e.salary));
+
+System.out.println(map.size());
+
+10.2 partitioningBy()
+Map<Boolean, List<Employee>> map =
+    list.stream()
+        .collect(Collectors.partitioningBy(e -> e.salary > 60000));
+
+System.out.println(map.get(true).size());
+
+10.3 joining()
+List<String> names = List.of("Java", "Spring");
+
+String result =
+    names.stream()
+         .collect(Collectors.joining(", "));
+
+System.out.println(result);
+
+Output
+Java, Spring
+
+11. Primitive Streams (Performance 🔥)
+Stream Type	Primitive
+IntStream	int
+LongStream	long
+DoubleStream	double
+IntStream.range(1, 5)
+         .forEach(System.out::println);
+
+Output
+1
+2
+3
+4
+
+✔ Avoids autoboxing
+✔ Faster performance
+
+12. Parallel Streams (🔥 Tricky)
+list.parallelStream()
+    .forEach(System.out::println);
+
+Key Points:
+Order not guaranteed
+Not suitable for:
+Small datasets
+Blocking I/O
+Stateful lambdas
+
+13. Lazy Evaluation (🔥 Important)
+list.stream()
+    .filter(x -> {
+        System.out.println("filter " + x);
+        return x > 2;
+    })
+    .findFirst();
+
+
+✔ Stops processing once condition satisfied
