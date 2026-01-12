@@ -1,0 +1,316 @@
+1. What is a Functional Interface?
+
+A Functional Interface (FI) is an interface that contains exactly ONE abstract method.
+
+@FunctionalInterface
+interface MyFunction {
+    void execute();
+}
+
+Interview one-liner
+“A functional interface is an interface with exactly one abstract method, used to support lambda expressions.”
+
+2. Why Functional Interfaces Were Introduced?
+
+Before Java 8:
+Heavy anonymous inner classes and boiler plate code
+Verbose and repetitive code
+
+Java 8 introduced:
+Functional interfaces
+Lambda expressions
+Functional programming support
+
+✔ Less boilerplate
+✔ Cleaner code
+✔ Better readability
+
+3. Rules of Functional Interfaces (🔥 MUST KNOW)
+
+✔ Must have exactly one abstract method
+✔ Can have multiple default methods
+✔ Can have multiple static methods
+✔ Can extend other interfaces (if abstract methods count = 1)
+✔ @FunctionalInterface is optional but recommended
+❌ Cannot have more than one abstract method
+
+4. @FunctionalInterface Annotation
+@FunctionalInterface
+interface Demo {
+    void show();
+}
+
+Why use it?
+Compile-time check
+Prevents accidental extra abstract methods
+❌ This will fail:
+
+@FunctionalInterface
+interface Demo {
+    void show();
+    void test(); // compile error
+}
+
+5. Functional Interface + Lambda (Core Concept)
+@FunctionalInterface
+interface Greeting {
+    void sayHello();
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Greeting g = () -> System.out.println("Hello Java 8");
+        g.sayHello();
+    }
+}
+
+Output
+Hello Java 8
+
+6. Types of Functional Interfaces
+Broad Categories
+Custom Functional Interfaces
+Built-in Functional Interfaces (java.util.function)
+
+PART A – Custom Functional Interfaces
+7. Functional Interface with No Parameter
+@FunctionalInterface
+interface Task {
+    void run();
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Task t = () -> System.out.println("Task running");
+        t.run();
+    }
+}
+
+Output
+Task running
+
+8. Functional Interface with One Parameter
+@FunctionalInterface
+interface Square {
+    int square(int x);
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Square s = x -> x * x;
+        System.out.println(s.square(5));
+    }
+}
+
+Output
+25
+
+9. Functional Interface with Multiple Parameters
+@FunctionalInterface
+interface Add {
+    int add(int a, int b);
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Add a = (x, y) -> x + y;
+        System.out.println(a.add(10, 20));
+    }
+}
+
+Output
+30
+
+10. Functional Interface with Return Type
+@FunctionalInterface
+interface Length {
+    int getLength(String s);
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Length l = s -> s.length();
+        System.out.println(l.getLength("Spring"));
+    }
+}
+
+Output
+6
+
+PART B – Built-in Functional Interfaces (🔥 VERY IMPORTANT)
+
+All are in java.util.function package.
+
+11. Predicate<T> – Condition Check
+
+Input → T
+Output → boolean
+
+Predicate<Integer> p = x -> x > 18;
+System.out.println(p.test(20));
+
+Output
+true
+
+Use Case:
+Filtering
+Validations
+
+12. Function<T, R> – Input → Output
+Function<String, Integer> f = s -> s.length();
+System.out.println(f.apply("Java"));
+
+Output
+4
+
+Use Case:
+Data transformation
+Mapping
+
+13. Consumer<T> – Input, No Output
+Consumer<String> c = s -> System.out.println(s);
+c.accept("Spring Boot");
+
+Output
+Spring Boot
+
+Use Case:
+Logging
+Printing
+Side effects
+
+14. Supplier<T> – No Input, Output
+Supplier<Double> s = () -> Math.random();
+System.out.println(s.get());
+
+Output
+0.5346723   // random value
+
+Use Case:
+Object creation
+Lazy loading
+
+15. BiPredicate<T, U>
+BiPredicate<Integer, Integer> bp = (a, b) -> a > b;
+System.out.println(bp.test(10, 5));
+
+Output
+true
+
+16. BiFunction<T, U, R>
+BiFunction<Integer, Integer, Integer> bf = (a, b) -> a + b;
+System.out.println(bf.apply(10, 20));
+
+Output
+30
+
+17. UnaryOperator<T>
+UnaryOperator<Integer> u = x -> x * x;
+System.out.println(u.apply(5));
+
+Output
+25
+
+18. BinaryOperator<T>
+BinaryOperator<Integer> b = (a, c) -> a + c;
+System.out.println(b.apply(10, 20));
+
+Output
+30
+
+19. Summary Table (🔥 Interview Favorite)
+| Interface      | Input | Output  |
+| -------------- | ----- | ------- |
+| Predicate      | T     | boolean |
+| Function       | T     | R       |
+| Consumer       | T     | void    |
+| Supplier       | none  | T       |
+| BiFunction     | T, U  | R       |
+| UnaryOperator  | T     | T       |
+| BinaryOperator | T, T  | T       |
+
+21. Functional Interface vs Normal Interface
+| Feature          | Functional Interface   | Normal Interface |
+| ---------------- | ---------------------- | ---------------- |
+| Abstract methods | Exactly 1              | Multiple         |
+| Lambda support   | ✅                      | ❌                |
+| Purpose          | Functional programming | General design   |
+
+22. Functional Interface vs Abstract Class
+| Functional Interface | Abstract Class |   |
+| -------------------- | -------------- | - |
+| Supports lambda      | ❌              |   |
+| Multiple inheritance | ✅              | ❌ |
+| State (fields)       | ❌              | ✅ |
+
+23. Functional Interfaces in Streams (🔥 MUST KNOW)
+List<Integer> list = List.of(1, 2, 3, 4);
+
+list.stream()
+    .filter(x -> x % 2 == 0)    // Predicate
+    .map(x -> x * 2)            // Function
+    .forEach(x -> System.out.println(x)); // Consumer
+
+Output
+4
+8
+
+23. Functional Interfaces in Streams (🔥 MUST KNOW)
+List<Integer> list = List.of(1, 2, 3, 4);
+
+list.stream()
+    .filter(x -> x % 2 == 0)    // Predicate
+    .map(x -> x * 2)            // Function
+    .forEach(x -> System.out.println(x)); // Consumer
+
+Output
+4
+8
+
+26. Common Tricky Interview Questions (4+ Years)
+Q1. Can a functional interface have default methods?
+
+✅ Yes
+
+Q2. Can it have static methods?
+
+✅ Yes
+
+Q3. Can functional interface extend another interface?
+
+✅ Yes (if abstract methods count = 1)
+
+Q4. Is Runnable a functional interface?
+
+✅ Yes
+
+Q5. Is Comparator a functional interface?
+
+✅ Yes
+
+27. JVM & Performance Perspective
+Lambda compiled using invokedynamic
+No anonymous class overhead
+JVM optimizes aggressively
+Memory efficient
+
+28. Linked Topics to Prepare Together 🔗
+
+Lambda expressions
+Method references
+Streams API
+Optional
+Comparator
+CompletableFuture
+Reactive programming
+
+29. Interview One-Liners (Use These)
+
+“Functional interface has exactly one abstract method.”
+“Predicate returns boolean.”
+“Consumer performs side effects.”
+“Supplier provides value without input.”
+“Functional interfaces enable lambda expressions.”
+
+30. Interview Closing Statement
+“Functional interfaces are the foundation of Java 8’s functional programming model, enabling lambdas, streams, and clean, expressive code in modern Spring Boot applications.”
