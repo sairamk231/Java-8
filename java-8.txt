@@ -1,69 +1,85 @@
 1️⃣ Lambda Expressions
-
 Enables functional programming
-
 Reduces boilerplate code
-
 Represents anonymous functions
 
-Example
-
+Example:
 Runnable r = () -> System.out.println("Hello Java 8");
 
 2️⃣ Functional Interfaces
-
 Interface with exactly one abstract method
-
 Can have default & static methods
-
 Annotated with @FunctionalInterface
 
-Common Functional Interfaces
-
+Common Functional Interfaces:
 Predicate<T>
-
 Function<T, R>
-
 Consumer<T>
-
 Supplier<T>
 
 3️⃣ Stream API
-
 Processes collections in a functional style
-
 Supports filter, map, reduce
-
 Supports parallel execution
 
-Operations
+Operations:
+    Intermediate: filter(), map(), sorted()
+    Terminal: forEach(), collect(), reduce()
 
-Intermediate: filter(), map(), sorted()
 
-Terminal: forEach(), collect(), reduce()
+1️⃣2️⃣ Collectors API Enhancements
+Used with streams
+Grouping, partitioning, summarizing
+
+Common Collectors:
+
+toList()
+groupingBy()
+partitioningBy()
+joining()
+
+7️⃣ Optional Class
+Prevents NullPointerException
+Represents optional values
+
+Methods:
+isPresent()
+ifPresent()
+orElse()
+orElseThrow()
+
+8️⃣ New Date & Time API (java.time)
+Immutable & thread-safe
+Replaces Date & Calendar
+
+Key Classes:
+LocalDate
+LocalTime
+LocalDateTime
+ZonedDateTime
+Duration
+Period
+
+9️⃣ forEach() Method
+Added to Iterable
+Iterates using lambda expressions
+list.forEach(e -> System.out.println(e));
+
 
 4️⃣ Method References
-
 Shorthand for lambda expressions
-
 Improves readability
 
-Types
-
+Types:
 Static method reference
-
 Instance method reference
-
 Constructor reference
 
 Example
-
 list.forEach(System.out::println);
 
 5️⃣ Default Methods (Interface)
-
 Allows method implementation in interfaces
-
 Enables backward compatibility
 
 default void show() {
@@ -71,138 +87,54 @@ default void show() {
 }
 
 6️⃣ Static Methods in Interfaces
-
 Interfaces can have static utility methods
 
 static void utility() {
     System.out.println("Static method");
 }
 
-7️⃣ Optional Class
-
-Prevents NullPointerException
-
-Represents optional values
-
-Methods
-
-isPresent()
-
-ifPresent()
-
-orElse()
-
-orElseThrow()
-
-8️⃣ New Date & Time API (java.time)
-
-Immutable & thread-safe
-
-Replaces Date & Calendar
-
-Key Classes
-
-LocalDate
-
-LocalTime
-
-LocalDateTime
-
-ZonedDateTime
-
-Duration
-
-Period
-
-9️⃣ forEach() Method
-
-Added to Iterable
-
-Iterates using lambda expressions
-
-list.forEach(e -> System.out.println(e));
-
 🔟 Nashorn JavaScript Engine
-
 Execute JavaScript code inside Java
-
 Faster than Rhino
-
 (Deprecated in later versions)
 
 1️⃣1️⃣ Parallel Streams
-
 Processes streams using multiple cores
-
 Improves performance for large datasets
-
 list.parallelStream().forEach(System.out::println);
 
-1️⃣2️⃣ Collectors API Enhancements
-
-Used with streams
-
-Grouping, partitioning, summarizing
-
-Common Collectors
-
-toList()
-
-groupingBy()
-
-partitioningBy()
-
-joining()
-
 1️⃣3️⃣ New Map Methods
-
 forEach()
-
 putIfAbsent()
-
 compute()
-
 computeIfAbsent()
-
 merge()
 
 1️⃣4️⃣ Enhanced Comparator
-
 Lambda support
-
 Comparator chaining
 
 Comparator.comparing(Employee::getName)
           .thenComparing(Employee::getAge);
 
 1️⃣5️⃣ Base64 Encoding & Decoding
-
 Built-in support via java.util.Base64
 
 1️⃣6️⃣ Type Inference Enhancements
-
 Improved type inference for generics
-
 Better lambda support
 
 1️⃣7️⃣ Improved Concurrency APIs
-
 New methods in CompletableFuture
-
 Improved ForkJoinPool
 
 1️⃣8️⃣ Repeating Annotations
-
 Allows same annotation multiple times
 
 1️⃣9️⃣ Parameter Names Reflection
-
 Access method parameter names at runtime
 
 2️⃣0️⃣ JVM & Performance Improvements
-
 Better memory management
-
 Faster execution
-
 Compact profiles
