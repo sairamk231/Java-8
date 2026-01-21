@@ -32,10 +32,50 @@ Benefits of Streams:
 4. Stream Pipeline (🔥 MUST KNOW)
 Source → Intermediate Operations → Terminal Operation
 
-list.stream()
-    .filter(x -> x > 10)
-    .map(x -> x * 2)
-    .forEach(System.out::println);
+Intermediate Operations:
+Intermediate operations in Java Streams return another Stream. They are typically used to transform or filter the elements of the original Stream. Since they are lazy, meaning they do not perform any processing until a terminal operation is called, multiple intermediate operations can be chained together.
+
+Common Intermediate Operations:
+map(Function<T, R>): Transforms each element of the Stream into another form using the provided function.
+filter(Predicate<T>): Selects elements from the Stream based on a specified condition.
+flatMap(Function<T, Stream<R>>): Transforms each element into zero or more elements by applying a function that returns a stream for each element.
+distinct(): Removes duplicate elements from the Stream.
+sorted(): Sorts the elements of the Stream.
+limit(long n): Truncates the Stream to be no longer than the specified size.
+skip(long n): Skips the first n elements of the Stream.
+peek(Consumer<T>): Performs a specified action on each element of the Stream without consuming the elements.
+
+2. Terminal Operations:
+Terminal operations are those operations that consume the Stream and produce a result, such as a value, a collection, or even a side effect.
+Once a terminal operation is invoked, the Stream is processed and cannot be reused.
+
+Common Terminal Operations:
+forEach(Consumer<T>): Acts as each element of the Stream.
+collect(Collector<T, A, R>): Reduces the elements of the Stream into a mutable result container, such as a list or a map.
+reduce(BinaryOperator<T>): Reduces the elements of the Stream to a single value using an associative accumulation function.
+count(): Returns the count of elements in the Stream.
+anyMatch(Predicate<T>): Returns true if any element of the Stream matches the given predicate.
+allMatch(Predicate<T>): Returns true if all elements of the Stream match the given predicate.
+noneMatch(Predicate<T>): Returns true if no elements of the Stream match the given predicate.
+findFirst(): Returns an Optional describing the first element of the Stream, or an empty Optional if the Stream is empty.
+findAny(): Returns an Optional describing some element of the Stream, or an empty Optional if the Stream is empty.
+
+3. Short-Circuit Operations
+Short-circuit operations are a subset of terminal operations that do not need to process the entire Stream to produce a result. 
+They can provide an early exit from the stream processing pipeline, potentially saving computation time.
+
+Common Short-Circuit Operations:
+
+anyMatch(Predicate<T>): Stops processing and returns true if any element matches the given predicate.
+allMatch(Predicate<T>): Stops processing and returns false if any element does not match the given predicate.
+noneMatch(Predicate<T>): Stops processing and returns true if no elements match the given predicate.
+findFirst(): Returns the first element encountered in the Stream and then stops processing.
+findAny(): Returns any element encountered in the Stream and then stops processing.
+
+Eg:    list.stream()
+        .filter(x -> x > 10)
+        .map(x -> x * 2)
+        .forEach(System.out::println);
 
 5. Stream Sources (All Ways)
 5.1 From Collection
