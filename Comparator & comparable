@@ -1,0 +1,236 @@
+Comparable & Comparator in Java – Complete Interview Notes
+Definition:
+Comparable and Comparator are used in Java to define object sorting logic.
+Comparable → natural ordering (inside the class)
+Comparator → custom ordering (outside the class)
+
+Comparable:
+Definition:
+Comparable is an interface used to define the natural ordering of objects.
+
+public interface Comparable<T> {
+    int compareTo(T o);
+}
+
+Key Points:
+Logic written inside the class
+Only one sorting sequence
+Modifies the class itself
+Used by default by Collections.sort()
+
+Comparable Example:
+class Employee implements Comparable<Employee> {
+    int id;
+    String name;
+
+    Employee(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public int compareTo(Employee e) {
+        return this.id - e.id;
+    }
+}
+
+List<Employee> list = List.of(
+    new Employee(3, "Ram"),
+    new Employee(1, "Sai"),
+    new Employee(2, "John")
+);
+
+Collections.sort(list);
+
+Output:
+1 Sai
+2 John
+3 Ram
+
+Comparator:
+Definition:
+Comparator is an interface used to define custom sorting logic externally.
+
+public interface Comparator<T> {
+    int compare(T o1, T o2);
+}
+
+Key Points:
+Logic written outside the class
+Supports multiple sorting strategies
+Does not modify the entity class
+Preferred in real projects
+
+Comparator Example (By Name):
+Comparator<Employee> nameComparator =
+    (e1, e2) -> e1.name.compareTo(e2.name);
+list.sort(nameComparator);
+
+Output:
+John
+Ram
+Sai
+
+Comparable vs Comparator (VERY IMPORTANT)
+| Feature          | Comparable   | Comparator    |
+| ---------------- | ------------ | ------------- |
+| Package          | java.lang    | java.util     |
+| Method           | compareTo()  | compare()     |
+| Sorting logic    | Inside class | Outside class |
+| Multiple sorting | ❌ No         | ✅ Yes         |
+| Lambda support   | ❌ No         | ✅ Yes         |
+| Real-world usage | Less         | **More**      |
+
+Comparator Methods (Java 8+) – MUST KNOW
+1️⃣ comparing()
+Comparator<Employee> byId =
+    Comparator.comparing(e -> e.id);
+
+Output:
+1 Sai
+2 John
+3 Ram
+
+2️⃣ comparingInt(), comparingLong(), comparingDouble()
+Comparator<Employee> byId =
+    Comparator.comparingInt(e -> e.id);
+
+
+✔ Avoids boxing → better performance
+
+3️⃣ reversed()
+Comparator<Employee> byIdDesc =
+    Comparator.comparingInt(Employee::getId).reversed();
+
+Output:
+3 Ram
+2 John
+1 Sai
+
+4️⃣ thenComparing() (VERY IMPORTANT)
+Comparator<Employee> byIdThenName =
+    Comparator.comparingInt(Employee::getId)
+              .thenComparing(e -> e.name);
+
+
+Used for multi-level sorting.
+
+5️⃣ nullsFirst() / nullsLast()
+Comparator<Employee> byName =
+    Comparator.comparing(e -> e.name,
+        Comparator.nullsLast(String::compareTo));
+
+Streams Sorting Examples (MODERN INTERVIEWS)
+Sort Using Comparable (Stream)
+list.stream()
+    .sorted()
+    .forEach(e -> System.out.println(e.name));
+
+Sort Using Comparator (Stream)
+list.stream()
+    .sorted(Comparator.comparing(e -> e.name))
+    .forEach(e -> System.out.println(e.name));
+
+Sort Descending Order
+list.stream()
+    .sorted(Comparator.comparing(Employee::getId).reversed())
+    .forEach(e -> System.out.println(e.id));
+
+Sort by Multiple Fields (Streams)
+list.stream()
+    .sorted(
+        Comparator.comparing(Employee::getId)
+                  .thenComparing(Employee::getName)
+    )
+    .forEach(System.out::println);
+
+Real-World Spring Boot Usage
+Sorting API responses
+Pagination sorting
+Custom DB-independent sorting
+Business rule based ordering
+
+Example:
+employees.sort(Comparator.comparing(Employee::getSalary).reversed());
+
+Interview Questions & Answers (Sequential)
+Q1: What is Comparable?
+Answer:
+Comparable defines natural ordering of objects using compareTo().
+
+Q2: What is Comparator?
+Answer:
+Comparator defines custom sorting logic using compare().
+
+Q3: Which one is preferred and why?
+Answer:
+Comparator, because it supports multiple sorting strategies and lambdas.
+
+Q4: Can a class implement multiple Comparables?
+Answer:
+No, only one compareTo() method is allowed.
+
+Q5: Can we have multiple Comparators?
+Answer:
+Yes, unlimited.
+
+Q6: What happens if compareTo() returns 0?
+Answer:
+Objects are considered equal in sorting.
+
+Q7: Does Comparator affect equals()?
+Answer:
+No, unless explicitly implemented that way.
+
+Q8: How sorting works internally?
+Answer:
+Java uses TimSort (hybrid of merge + insertion sort).
+
+Q9: What is stable sorting?
+Answer:
+Preserves original order for equal elements.
+
+Q10: How do you sort in descending order?
+Answer:
+Using reversed().
+
+Tricky Interview Questions (4+ Years)
+🔥 Q11: Can compareTo() throw NullPointerException?
+Answer:
+Yes, if not null-safe.
+
+🔥 Q12: Difference between Comparator.comparing() and comparingInt()?
+Answer:
+comparingInt() avoids boxing → better performance.
+
+🔥 Q13: Can Comparator be stateful?
+Answer:
+Yes, but not recommended.
+
+🔥 Q14: What happens if comparator is inconsistent?
+Answer:
+Unpredictable sorting results.
+
+🔥 Q15: Comparator vs Comparable in Streams?
+Answer:
+Streams prefer Comparator for flexibility.
+
+🔥 Q16: Can we sort Map using Comparator?
+Answer:
+Yes, by converting to stream of entries.
+
+🔥 Q17: Why Comparator is functional interface?
+Answer:
+It has only one abstract method → supports lambda.
+
+🔥 Q18: Does sorting modify original list?
+Answer:
+Collections.sort() → YES
+stream().sorted() → NO (creates new stream)
+
+🔥 Q19: Can we sort immutable list?
+Answer:
+No, it throws UnsupportedOperationException.
+
+🔥 Q20: Best interview one-liner?
+Answer:
+“Use Comparable for natural ordering and Comparator for flexible, external, and stream-based sorting.”
