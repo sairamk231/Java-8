@@ -1,0 +1,233 @@
+Definition:
+
+Optional is a container object that may or may not contain a non-null value.
+It is used to avoid NullPointerException and represent absence of value explicitly.
+
+Why Optional?
+Before Java 8:
+if (user != null && user.getAddress() != null) ...
+
+After Java 8:
+Optional.ofNullable(user)
+        .map(User::getAddress)
+        .ifPresent(System.out::println);
+
+
+✔ Cleaner
+✔ Null-safe
+✔ Functional style
+
+Creating Optional
+1️⃣ of()
+Definition:
+
+Creates Optional with non-null value.
+
+Optional<String> opt = Optional.of("Sai");
+
+
+⚠ Throws NPE if null.
+
+2️⃣ ofNullable()
+Definition:
+Creates Optional that may hold null.
+Optional<String> opt = Optional.ofNullable(null);
+
+3️⃣ empty()
+Definition:
+Creates empty Optional.
+Optional<String> opt = Optional.empty();
+
+
+Core Optional Methods (All Important)
+1️⃣ isPresent()
+Definition:
+Checks if value exists.
+Optional<String> opt = Optional.of("Java");
+System.out.println(opt.isPresent());
+
+Output:
+true
+
+2️⃣ ifPresent()
+Definition:
+Executes action if value present.
+opt.ifPresent(v -> System.out.println(v));
+
+Output:
+Java
+
+3️⃣ get()
+Definition:
+Returns value if present.
+opt.get();
+⚠ Throws NoSuchElementException if empty.
+
+👉 Interview: avoid get().
+
+4️⃣ orElse()
+Definition:
+Returns value or default.
+Optional<String> opt = Optional.empty();
+System.out.println(opt.orElse("Default"));
+
+Output:
+Default
+
+5️⃣ orElseGet()
+Definition:
+Returns value or supplier result.
+opt.orElseGet(() -> "Generated");
+
+6️⃣ orElseThrow()
+Definition:
+Throws exception if empty.
+opt.orElseThrow(() -> new RuntimeException("No value"));
+
+7️⃣ map()
+Definition:
+Transforms value if present.
+Optional<String> opt = Optional.of("java");
+System.out.println(opt.map(String::toUpperCase));
+
+Output:
+Optional[JAVA]
+
+8️⃣ flatMap()
+Definition:
+Transforms Optional-returning function.
+Optional<User> user = Optional.of(new User("Sai"));
+Optional<String> name =
+    user.flatMap(u -> Optional.of(u.getName()));
+
+9️⃣ filter()
+Definition:
+Returns Optional if condition true.
+Optional<Integer> opt = Optional.of(10);
+System.out.println(opt.filter(n -> n > 5));
+
+Output:
+Optional[10]
+
+
+
+Find Any
+Optional<Integer> any =
+    List.of(5,6,7).stream().findAny();
+
+Max
+Optional<Integer> max =
+    List.of(3,9,2).stream().max(Integer::compare);
+
+System.out.println(max);
+
+Output:
+Optional[9]
+
+Using Optional in Stream Chain
+String result =
+    Optional.ofNullable("java")
+            .map(String::toUpperCase)
+            .orElse("NA");
+
+System.out.println(result);
+
+Output:
+JAVA
+
+Optional in Spring Boot (Real Usage)
+Repository
+Optional<User> findById(Long id);
+
+Service
+User user = repo.findById(id)
+                .orElseThrow(() ->
+                    new RuntimeException("Not found"));
+
+
+✔ Standard practice
+
+Optional Best Practices (Interview)
+
+✔ Use as return type
+✔ Avoid in fields
+✔ Avoid in method parameters
+✔ Avoid get()
+✔ Prefer map / orElse
+
+Interview Questions & Answers (Sequential)
+Q1: What is Optional?
+Answer:
+Optional is a container object representing presence or absence of a value.
+
+Q2: Why Optional introduced?
+Answer:
+To avoid NullPointerException and make null handling explicit.
+
+Q3: Difference between of() and ofNullable()?
+Answer:
+of() rejects null; ofNullable() allows null.
+
+Q4: Difference between orElse and orElseGet?
+Answer:
+orElse evaluates immediately; orElseGet lazily.
+
+Q5: Why get() is discouraged?
+Answer:
+It throws exception if value absent.
+
+Q6: Can Optional hold null?
+Answer:
+No. Optional either has value or empty.
+
+Q7: Is Optional serializable?
+Answer:
+No.
+
+Q8: Is Optional thread-safe?
+Answer:
+Yes, immutable.
+
+Q9: Can Optional be field?
+Answer:
+Not recommended.
+
+Q10: When should Optional be used?
+Answer:
+As return type when value may be absent.
+
+Tricky Interview Questions (4+ Years)
+🔥 Q11: Optional vs Null — performance?
+Answer:
+Optional adds small overhead; use for clarity not primitives-heavy loops.
+
+🔥 Q12: Optional vs Exception?
+Answer:
+Optional → expected absence
+Exception → exceptional condition
+
+🔥 Q13: Why Optional not for parameters?
+Answer:
+Makes API confusing and unnecessary wrapping.
+
+🔥 Q14: Can Optional contain Optional?
+Answer:
+Yes, but use flatMap() to avoid nesting.
+
+🔥 Q15: Optional in collections?
+Answer:
+Avoid List<Optional<T>>.
+
+🔥 Q16: Optional in entity?
+Answer:
+Not recommended (serialization/JPA issues).
+
+🔥 Q17: Optional vs Stream?
+Answer:
+Optional → single value
+Stream → multiple values
+
+🔥 Q18: Best Optional interview one-liner?
+Answer:
+
+“Optional represents absence of value explicitly and avoids NullPointerException using functional style operations.”
